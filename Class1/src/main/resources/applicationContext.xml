@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+
+
+
+
+
+
+    <!--创建一个Student的Bean-->
+    <bean id="student1" class="Util5.Spring01.Student">
+        <property name="id" value="1"></property>
+        <property name="name" value="zhangsan"></property>
+    </bean>
+
+    <bean id="student2" class="Util5.Spring01.Student">
+        <property name="id" value="2"></property>
+        <property name="name" value="wangwu"></property>
+    </bean>
+
+
+    <bean class="Util5.Spring01.Klass" id="class1">
+        <property name="students">
+            <list>
+                <ref bean="student1"></ref>
+                <ref bean="student2"></ref>
+            </list>
+        </property>
+    </bean>
+
+    <!--扫描包下面的所有内容-->
+    <context:component-scan base-package="Util5.Spring01" />
+
+    <!--创建一个AOP1的Bean-->
+    <bean id="aop1" class="Util5.Spring01.AOP1"></bean>
+
+
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+
+    <aop:config>
+        <aop:pointcut id="p1" expression="execution(* Util5.Spring01.*.*(..))"/><!--切点-->
+        <aop:aspect ref="aop1"><!-- 切面 -->
+            <aop:around method="around" pointcut-ref="p1"></aop:around>
+            <aop:before method="startTransaction" pointcut-ref="p1"></aop:before>
+            <aop:after-returning method="endTransaction" pointcut-ref="p1"></aop:after-returning>
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="school" class="Util5.Spring01.School"></bean>
+</beans>
